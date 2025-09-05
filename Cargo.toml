@@ -1,0 +1,11 @@
+[package]
+name = "queuecast"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chrono = { version = "0.4.41", features = ["serde"] }
+clap = "4.5.46"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.143"
+sha2 = "0.10.9"
