@@ -105,17 +105,30 @@ fn scan_episodes(dir: &Path) -> Result<Vec<Episode>, Box<dyn std::error::Error>>
 
 fn add_program(db: &mut Database, directory: &str) -> Result<(), Box<dyn std::error::Error>> {
     let dir_path = PathBuf::from(directory);
-    if !dir_path.exists() || !dir_path.is_dir() {
+    // Convert to absolute path
+    let abs_dir_path = if dir_path.is_absolute() {
+        dir_path
+    } else {
+        // Get current directory and join with the relative path
+        let current_dir = env::current_dir()?;
+        current_dir.join(&dir_path)
+    };
+    
+    // Check if the directory exists
+    if !abs_dir_path.exists() || !abs_dir_path.is_dir() {
         return Err("Directory does not exist or is not a directory".into());
     }
 
-    let name = dir_path.file_name()
+    // Get the canonical path to resolve any symlinks and ensure it's absolute
+    let canonical_dir_path = fs::canonicalize(&abs_dir_path)?;
+
+    let name = canonical_dir_path.file_name()
         .ok_or("Invalid directory name")?
         .to_string_lossy()
         .to_string();
     
     let hash = generate_hash(&name);
-    let episodes = scan_episodes(&dir_path)?;
+    let episodes = scan_episodes(&canonical_dir_path)?;
     
     if episodes.is_empty() {
         return Err("No video files found in directory".into());
@@ -124,7 +137,7 @@ fn add_program(db: &mut Database, directory: &str) -> Result<(), Box<dyn std::er
     let program = Program {
         name: name.clone(),
         hash: hash.clone(),
-        directory: dir_path,
+        directory: canonical_dir_path,
         episodes,
         current_episode: 0,
         start_date: None,
