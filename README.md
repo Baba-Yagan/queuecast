@@ -2,18 +2,6 @@
 
 A command-line tool for managing TV show files with weekly scheduling.
 
-## Building
-
-Build the project in release mode:
-```bash
-make build
-```
-
-For development builds:
-```bash
-make dev
-```
-
 ## Installation
 
 ### User Installation
@@ -28,26 +16,38 @@ Install system-wide to `/usr/local/bin` (requires sudo):
 make install-system
 ```
 
+## Building
+
+### Build the project in release mode:
+```bash
+make build
+```
+
+### For development builds:
+```bash
+make dev
+```
+
 ## Uninstalling
 
-Remove from user directory:
+### Remove from user directory:
 ```bash
 make uninstall
 ```
 
-Remove from system directory:
+### Remove from system directory:
 ```bash
 make uninstall-system
 ```
 
 ## Development
 
-Run the program during development:
+### Run the program during development:
 ```bash
 make run
 ```
 
-Clean build artifacts:
+### Clean build artifacts:
 ```bash
 make clean
 ```
